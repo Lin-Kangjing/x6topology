@@ -1,18 +1,30 @@
+<!--
+ * @Description: 
+ * @FilePath: \x6topology\src\views\Home.vue
+ * @Date: 2021-12-28 17:30:47
+ * @LastEditors: Lin_kangjing
+ * @LastEditTime: 2022-01-12 10:21:45
+ * @author: Lin_kangjing
+-->
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+    <x6topology></x6topology>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from "@/components/HelloWorld.vue";
-
+import x6topology from "../components/x6topology/Index";
 export default {
   name: "Home",
-  components: {
-    HelloWorld,
-  },
+  components: { x6topology },
+  mounted() {},
 };
 </script>
+<style scoped>
+.home {
+  box-sizing: border-box;
+  height: 95vh;
+  padding: 30px;
+  text-align: left;
+}
+</style>
