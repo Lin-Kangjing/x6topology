@@ -3,7 +3,7 @@
  * @FilePath: \x6topology\src\components\x6topology\common\node\textBox.js
  * @Date: 2022-01-19 14:14:49
  * @LastEditors: Lin_kangjing
- * @LastEditTime: 2022-01-21 14:58:34
+ * @LastEditTime: 2022-02-15 17:14:16
  * @author: Lin_kangjing
  */
 import { Node, ObjectExt } from "@antv/x6";
@@ -23,7 +23,7 @@ const TextBox = Node.define({
   attrs: {
     body: {
       fill: "none",
-      stroke: "none",
+      stroke: null,
       refWidth: "100%",
       refHeight: "100%",
     },

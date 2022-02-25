@@ -1,9 +1,9 @@
 <!--
  * @Description: 画布面板
- * @FilePath: \x6topology\src\components\x6topology\components\CanvasPanel\CanvasPanel.vue
+ * @FilePath: \x6topology\src\components\X6topology\components\CanvasPanel\CanvasPanel.vue
  * @Date: 2022-01-06 09:27:50
  * @LastEditors: Lin_kangjing
- * @LastEditTime: 2022-01-14 17:35:04
+ * @LastEditTime: 2022-02-24 16:30:50
  * @author: Lin_kangjing
 -->
 <template>
@@ -32,7 +32,17 @@ export default {
       const minimapEl = document.getElementById("minimap");
       const g = new Graph({
         container: el,
+        snap: true, //连线吸附
+        // 配置全局的连线规则
+        connecting: {
+          snap: true, //连线吸附
+          allowBlank: false, //允许连接到空白地方
+        },
+
         grid: true,
+        background: {
+          color: "#f4f4f4",
+        },
         // 画布是否可以拖动
         panning: {
           enabled: true,
@@ -96,6 +106,117 @@ export default {
       this.textNodeEdit();
       // 广播初始化完成
       bus.$emit("init");
+
+      const w = g.addNode({
+        shape: "image",
+        x: 140,
+        y: 140,
+        width: 40,
+        height: 40,
+        imageUrl: require("../NodePanel/nodeSvg/earth.svg"),
+        label: "网络",
+        attrs: {
+          label: {
+            refY: "100%",
+            refY2: 10,
+          },
+        },
+        data: null,
+        ports: {
+          groups: {
+            simple: {
+              position: {
+                name: "ellipseSpread",
+                args: { dr: 5 },
+              },
+              attrs: {
+                circle: {
+                  r: 4,
+                  magnet: true,
+                  stroke: "#31d0c6",
+                  strokeWidth: 1,
+                  fill: "#fff",
+                },
+              },
+            },
+          },
+          items: [
+            {
+              id: "simple1",
+              group: "simple",
+            },
+            {
+              id: "simple2",
+              group: "simple",
+            },
+            {
+              id: "simple3",
+              group: "simple",
+            },
+            {
+              id: "simple4",
+              group: "simple",
+            },
+          ],
+        },
+      });
+      const s = g.addNode({
+        shape: "image",
+        x: 340,
+        y: 340,
+        width: 40,
+        height: 40,
+        imageUrl: require("../NodePanel/nodeSvg/earth.svg"),
+        label: "网络",
+        attrs: {
+          label: {
+            refY: "100%",
+            refY2: 10,
+          },
+        },
+        data: null,
+        ports: {
+          groups: {
+            simple: {
+              position: {
+                name: "ellipseSpread",
+                args: { dr: 5 },
+              },
+              attrs: {
+                circle: {
+                  r: 4,
+                  magnet: true,
+                  stroke: "#31d0c6",
+                  strokeWidth: 1,
+                  fill: "#fff",
+                },
+              },
+            },
+          },
+          items: [
+            {
+              id: "simple1",
+              group: "simple",
+            },
+            {
+              id: "simple2",
+              group: "simple",
+            },
+            {
+              id: "simple3",
+              group: "simple",
+            },
+            {
+              id: "simple4",
+              group: "simple",
+            },
+          ],
+        },
+      });
+      g.addEdge({
+        source: w,
+        target: s,
+      });
     },
     // 开启双击文本节点编辑
     textNodeEdit() {

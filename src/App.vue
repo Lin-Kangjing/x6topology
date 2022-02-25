@@ -3,7 +3,7 @@
  * @FilePath: \x6topology\src\App.vue
  * @Date: 2021-12-28 17:30:47
  * @LastEditors: Lin_kangjing
- * @LastEditTime: 2022-01-06 10:02:10
+ * @LastEditTime: 2022-02-16 15:28:06
  * @author: Lin_kangjing
 -->
 <template>
@@ -13,9 +13,11 @@
 </template>
 
 <style lang="less">
+html,
 body {
   padding: 0;
   margin: 0;
+  height: 100%;
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;

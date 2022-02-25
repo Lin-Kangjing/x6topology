@@ -3,7 +3,7 @@
  * @FilePath: \x6topology\src\components\x6topology\components\DetailsPanel\DetailsPanel.vue
  * @Date: 2022-01-06 09:46:14
  * @LastEditors: Lin_kangjing
- * @LastEditTime: 2022-01-21 15:51:53
+ * @LastEditTime: 2022-02-25 17:29:55
  * @author: Lin_kangjing
 -->
 <template>
@@ -12,220 +12,81 @@
     <div v-if="cell" class="info">
       <!-- <div class="title-bar">模型信息</div> -->
       <el-collapse v-model="active">
-        <!-- 位置和大小 -->
-        <el-collapse-item title="" name="position">
-          <div class="title-bar" slot="title">位置和大小</div>
+        <el-collapse-item
+          v-for="item in detailsPanel"
+          :key="item.name"
+          :name="item.name"
+        >
+          <div class="title-bar" slot="title">{{ item.name }}</div>
           <div class="attr-wrapper">
-            <el-row :gutter="gutter">
-              <el-col :span="8">X</el-col>
+            <el-row
+              v-for="attr in item.attrs"
+              :key="attr.name"
+              :gutter="gutter"
+            >
+              <el-col :span="8">{{ attr.name }}</el-col>
               <el-col :span="16">
+                <!-- 数字 -->
                 <el-input-number
-                  v-model="attr.x"
+                  v-if="attr.formControls === 'el-input-number'"
+                  v-model="cellAttr[attr.attrName]"
                   controls-position="right"
                   :size="size"
                   :min="0"
-                  @change="(val) => boxChange('x', val)"
+                  @change="(val) => item.changeFn(attr.attrName, val)"
                 ></el-input-number>
-              </el-col>
-            </el-row>
-            <el-row :gutter="gutter">
-              <el-col :span="8">Y</el-col>
-              <el-col :span="16">
-                <el-input-number
-                  v-model="attr.y"
-                  controls-position="right"
-                  :size="size"
-                  :min="0"
-                  @change="(val) => boxChange('y', val)"
-                ></el-input-number>
-              </el-col>
-            </el-row>
-            <el-row :gutter="gutter">
-              <el-col :span="8">宽</el-col>
-              <el-col :span="16">
-                <el-input-number
-                  v-model="attr.width"
-                  controls-position="right"
-                  :size="size"
-                  :min="0"
-                  @change="(val) => boxChange('width', val)"
-                ></el-input-number>
-              </el-col>
-            </el-row>
-            <el-row :gutter="gutter">
-              <el-col :span="8">高</el-col>
-              <el-col :span="16">
-                <el-input-number
-                  v-model="attr.height"
-                  controls-position="right"
-                  :size="size"
-                  :min="0"
-                  @change="(val) => boxChange('height', val)"
-                ></el-input-number>
-              </el-col>
-            </el-row>
-            <el-row :gutter="gutter">
-              <el-col :span="8">角度</el-col>
-              <el-col :span="16">
-                <el-input-number
-                  v-model="attr.rotate"
-                  controls-position="right"
-                  :size="size"
-                  :min="0"
-                  :max="360"
-                  @change="(val) => boxChange('rotate', val)"
-                ></el-input-number>
-              </el-col>
-            </el-row>
-          </div>
-        </el-collapse-item>
-        <!-- 样式 -->
-        <el-collapse-item title="" name="style">
-          <div class="title-bar" slot="title">样式</div>
-          <div class="attr-wrapper">
-            <el-row :gutter="gutter">
-              <el-col :span="8">线条样式</el-col>
-              <el-col :span="16">
+                <!-- 下拉 -->
                 <el-select
-                  v-model="attr.shape_strokeDasharray"
+                  v-else-if="attr.formControls === 'el-select'"
+                  v-model="cellAttr[attr.attrName]"
                   :size="size"
                   placeholder="请选择"
-                  @change="(val) => styleChange('strokeDasharray', val)"
+                  @change="(val) => item.changeFn(attr.attrName, val)"
                 >
                   <el-option
-                    v-for="item in shapeBorderTypeOptions"
-                    :key="item.label"
-                    :label="item.label"
-                    :value="item.value"
+                    v-for="option in attr.options"
+                    :key="typeof option === 'object' ? option.value : option"
+                    :label="typeof option === 'object' ? option.label : option"
+                    :value="typeof option === 'object' ? option.value : option"
                   >
+                    <div v-if="attr.isArrow">
+                      {{ option.label }}
+                    </div>
                   </el-option>
                 </el-select>
-              </el-col>
-            </el-row>
-
-            <el-row :gutter="gutter">
-              <el-col :span="8">线条宽度</el-col>
-              <el-col :span="16">
-                <el-select
-                  v-model="attr.shape_strokeWidth"
-                  :size="size"
-                  placeholder="请选择"
-                  @change="(val) => styleChange('strokeWidth', val)"
-                >
-                  <el-option
-                    v-for="item in shapeBorderWidthOptions"
-                    :key="item"
-                    :label="item"
-                    :value="item"
-                  >
-                  </el-option>
-                </el-select>
-              </el-col>
-            </el-row>
-            <el-row :gutter="gutter">
-              <el-col :span="8">线条颜色</el-col>
-              <el-col :span="16">
+                <!-- 颜色 -->
                 <el-color-picker
-                  v-model="attr.shape_stroke"
+                  v-else-if="attr.formControls === 'el-color-picker'"
+                  v-model="cellAttr[attr.attrName]"
                   :size="size"
                   show-alpha
-                  @change="(val) => styleChange('stroke', val)"
+                  @change="(val) => item.changeFn(attr.attrName, val)"
                 ></el-color-picker>
-              </el-col>
-            </el-row>
-            <el-row :gutter="gutter">
-              <el-col :span="8">背景颜色</el-col>
-              <el-col :span="16">
-                <el-color-picker
-                  v-model="attr.shape_fill"
-                  :size="size"
-                  show-alpha
-                  @change="(val) => styleChange('fill', val)"
-                ></el-color-picker>
-              </el-col>
-            </el-row>
-          </div>
-        </el-collapse-item>
-        <!-- 文本 -->
-        <el-collapse-item title="" name="text">
-          <div class="title-bar" slot="title">文本</div>
-          <div class="attr-wrapper">
-            <el-row :gutter="gutter">
-              <el-col :span="8">字体大小</el-col>
-              <el-col :span="16">
-                <el-select
-                  v-model="attr.label_fontSize"
-                  :size="size"
-                  placeholder="请选择"
-                  @change="(val) => textChange('fontSize', val)"
-                >
-                  <el-option
-                    v-for="item in labelFontSizeOptions"
-                    :key="item"
-                    :label="item"
-                    :value="item"
-                  >
-                  </el-option>
-                </el-select>
-              </el-col>
-            </el-row>
-            <el-row :gutter="gutter">
-              <el-col :span="8">字体颜色</el-col>
-              <el-col :span="16">
-                <el-color-picker
-                  v-model="attr.label_fill"
-                  :size="size"
-                  show-alpha
-                  @change="(val) => textChange('fill', val)"
-                ></el-color-picker>
-              </el-col>
-            </el-row>
-            <el-row :gutter="gutter">
-              <el-col :span="8">字体名</el-col>
-              <el-col :span="16">
-                <el-select
-                  v-model="attr.label_fontFamily"
-                  :size="size"
-                  placeholder="请选择"
-                  @change="(val) => textChange('fontFamily', val)"
-                >
-                  <el-option
-                    v-for="item in labelFontFamilyOptions"
-                    :key="item"
-                    :label="item"
-                    :value="item"
-                  >
-                  </el-option>
-                </el-select>
-              </el-col>
-            </el-row>
-            <el-row :gutter="gutter">
-              <el-col :span="8">字体样式</el-col>
-              <el-col :span="16">
+                <!-- 字体样式 -->
+                <!-- <div v-else-if="attr.formControls === 'el-checkbox-group'">
+                  {{ attr.options }}
+                </div> -->
                 <el-checkbox-group
-                  v-model="attr.label_fontStyle"
+                  v-else-if="attr.formControls === 'el-checkbox-group'"
+                  v-model="cellAttr[attr.attrName]"
                   :size="size"
-                  @change="(val) => textChange('labelFontStyle', val)"
+                  @change="(val) => item.changeFn(attr.attrName, val)"
                 >
                   <el-checkbox-button
-                    v-for="item in labelFontStyleOptions"
-                    :key="item.icon"
-                    :label="item.styleKey"
-                    ><svg class="iconpark-icon">
-                      <use :href="item.icon"></use>
-                    </svg>
+                    v-for="font in attr.options"
+                    :key="font.title"
+                    :label="font.styleKey"
+                  >
+                    <svg-icon :name="font.icon"></svg-icon>
                   </el-checkbox-button>
                 </el-checkbox-group>
-              </el-col>
-            </el-row>
-            <el-row :gutter="gutter">
-              <el-col :span="8">内容</el-col>
-              <el-col :span="16">
+                <!-- 文字内容 -->
                 <el-input
-                  v-model="attr.label"
+                  v-else-if="attr.formControls === 'el-textarea'"
+                  v-model="cellAttr[attr.attrName]"
                   type="textarea"
                   :size="size"
-                  @change="(val) => textChange('label', val)"
+                  @change="(val) => item.changeFn(attr.attrName, val)"
                 ></el-input>
               </el-col>
             </el-row>
@@ -237,10 +98,21 @@
 </template>
 
 <script>
-import "../../utils/svgIcon";
 import bus from "../../utils/bus";
 import { state, mutations } from "../../store";
-function getAttr() {
+import {
+  borderTypeOptions,
+  borderWidthOptions,
+  labelFontSizeOptions,
+  labelFontFamilyOptions,
+  labelFontStyleOptions,
+  fontStyleKeyMaps,
+  // 边
+  edgeArrowTypeOptions,
+  // edgeArrowTypeMap,
+} from "./options";
+// 获取基本属性
+function getInitCellAttr() {
   return {
     x: "",
     y: "",
@@ -254,74 +126,206 @@ function getAttr() {
     shape_stroke: "",
     shape_fill: "",
     // label 的设置
-    label: "",
-    label_fontSize: "",
-    label_fill: "",
-    label_fontFamily: "",
-    label_fontStyle: [],
+    text: "",
+    text_fontSize: "",
+    text_fill: "",
+    text_fontFamily: "",
+    text_fontStyle: [],
+    // edge
+    line_strokeDasharray: "",
+    line_strokeWidth: "",
+    line_stroke: "",
+    line_sourceMarker: "",
+    line_targetMarker: "",
   };
 }
 export default {
   components: {},
   data() {
     return {
-      active: ["text"],
+      active: ["文本"],
       gutter: 15,
       size: "small",
-      attr: getAttr(),
-      // node线条类型
-      shapeBorderTypeOptions: Object.freeze([
-        { label: "实线", value: null },
-        { label: "虚线", value: "8 5" },
-      ]),
-      // node线宽度
-      shapeBorderWidthOptions: Object.freeze([1, 2, 3, 4, 5, 10]),
-      // 文本fontsize
-      labelFontSizeOptions: Object.freeze([12, 13, 14, 15, 16, 17, 18, 19, 20]),
-      // 字体名
-      labelFontFamilyOptions: Object.freeze([
-        "Arial",
-        "Helvetica",
-        "Microsoft JhengHei",
-        "SimSun",
-        "SimHei",
-        "NSimSun",
-        "PMingLiU",
-        "MingLiU",
-        "DFKai-SB",
-        "FangSong",
-        "GB2312 KaiTi_GB2312",
-        "Sans-serif",
-      ]),
-      // 字体Style
-      labelFontStyleOptions: Object.freeze([
+      cellAttr: getInitCellAttr(), //节点边属性
+      // 节点面板
+      nodePanel: Object.freeze([
         {
-          styleKey: "fontWeight",
-          icon: "#text-bold",
-          title: "文字加粗",
+          name: "位置和大小",
+          changeFn: this.boxChange,
+          attrs: [
+            {
+              name: "X",
+              attrName: "x",
+              formControls: "el-input-number",
+            },
+            {
+              name: "Y",
+              attrName: "y",
+              formControls: "el-input-number",
+            },
+            {
+              name: "宽度",
+              attrName: "width",
+              formControls: "el-input-number",
+            },
+            {
+              name: "高度",
+              attrName: "height",
+              formControls: "el-input-number",
+            },
+            {
+              name: "角度",
+              attrName: "rotate",
+              formControls: "el-input-number",
+            },
+          ],
         },
         {
-          styleKey: "fontStyle",
-          icon: "#text-italic",
-          title: "文字斜体",
+          name: "样式",
+          changeFn: this.styleChange,
+          attrs: [
+            {
+              name: "线条样式",
+              attrName: "shape_strokeDasharray",
+              formControls: "el-select",
+              options: borderTypeOptions,
+            },
+            {
+              name: "线条宽度",
+              attrName: "shape_strokeWidth",
+              formControls: "el-select",
+              options: borderWidthOptions,
+            },
+            {
+              name: "线条颜色",
+              attrName: "shape_stroke",
+              formControls: "el-color-picker",
+            },
+            {
+              name: "背景颜色",
+              attrName: "shape_fill",
+              formControls: "el-color-picker",
+            },
+          ],
         },
         {
-          styleKey: "textDecoration",
-          icon: "#text-underline",
-          title: "文字下划线",
+          name: "文本",
+          changeFn: this.textChange,
+          attrs: [
+            {
+              name: "字体大小",
+              attrName: "text_fontSize",
+              formControls: "el-select",
+              options: labelFontSizeOptions,
+            },
+            {
+              name: "字体颜色",
+              attrName: "text_fill",
+              formControls: "el-color-picker",
+            },
+            {
+              name: "字体名",
+              attrName: "text_fontFamily",
+              formControls: "el-select",
+              options: labelFontFamilyOptions,
+            },
+            {
+              name: "字体样式",
+              attrName: "text_fontStyle",
+              formControls: "el-checkbox-group",
+              options: labelFontStyleOptions,
+            },
+            {
+              name: "内容",
+              attrName: "text",
+              formControls: "el-textarea",
+            },
+          ],
         },
       ]),
-      // 字体style maps
-      fontStyleKeyMaps: Object.freeze({
-        fontWeight: "bold",
-        fontStyle: "italic",
-        textDecoration: "underline",
-      }),
+      edgePanel: Object.freeze([
+        {
+          name: "样式",
+          changeFn: this.edgeStyleChange,
+          attrs: [
+            {
+              name: "线条样式",
+              attrName: "line_strokeDasharray",
+              formControls: "el-select",
+              options: borderTypeOptions,
+            },
+            {
+              name: "线条宽度",
+              attrName: "line_strokeWidth",
+              formControls: "el-select",
+              options: borderWidthOptions,
+            },
+            {
+              name: "线条颜色",
+              attrName: "line_stroke",
+              formControls: "el-color-picker",
+            },
+            {
+              name: "始端样式",
+              isArrow: true,
+              attrName: "line_sourceMarker",
+              formControls: "el-select",
+              options: edgeArrowTypeOptions,
+            },
+            {
+              name: "末端样式",
+              isArrow: true,
+              attrName: "line_targetMarker",
+              formControls: "el-select",
+              options: edgeArrowTypeOptions,
+            },
+          ],
+        },
+        {
+          name: "文本",
+          changeFn: this.textChange,
+          attrs: [
+            {
+              name: "字体大小",
+              attrName: "text_fontSize",
+              formControls: "el-select",
+              options: labelFontSizeOptions,
+            },
+            {
+              name: "字体颜色",
+              attrName: "text_fill",
+              formControls: "el-color-picker",
+            },
+            {
+              name: "字体名",
+              attrName: "text_fontFamily",
+              formControls: "el-select",
+              options: labelFontFamilyOptions,
+            },
+            {
+              name: "字体样式",
+              attrName: "text_fontStyle",
+              formControls: "el-checkbox-group",
+              options: labelFontStyleOptions,
+            },
+            {
+              name: "内容",
+              attrName: "text",
+              formControls: "el-textarea",
+            },
+          ],
+        },
+      ]),
     };
   },
   computed: {
+    // 当前点击到的节点，或边
     cell() {
       return state.cell;
+    },
+    // 详情面板内容
+    detailsPanel() {
+      return state.cell.isNode() ? this.nodePanel : this.edgePanel;
     },
   },
   created() {},
@@ -332,58 +336,77 @@ export default {
     });
   },
   methods: {
+    // 初始化
     init() {
       state.g.on("cell:click", ({ cell }) => {
         mutations.setCell(cell);
-        this.attr = getAttr();
-        // 设置x,y,width,height
-        const box = cell.getBBox();
-        for (const key in this.attr) {
-          if (Object.hasOwnProperty.call(this.attr, key) && key in box) {
-            this.attr[key] = box[key];
+        this.cellAttr = getInitCellAttr();
+        let attrs = cell.getAttrs();
+        const shape = cell.shape;
+
+        // 设置节点
+        if (cell.isNode()) {
+          // 设置x,y,width,height
+          const box = cell.getBBox();
+          for (const key in this.cellAttr) {
+            if (Object.hasOwnProperty.call(this.cellAttr, key) && key in box) {
+              this.cellAttr[key] = box[key];
+            }
+          }
+
+          // 设置旋转角度
+          this.cellAttr.rotate = cell.getAngle();
+
+          // 设置shape的样式属性
+          let shapeAttrs = attrs && attrs[shape];
+          if (!shapeAttrs) shapeAttrs = attrs.body;
+          if (shapeAttrs) {
+            this.cellAttr.shape_strokeDasharray = shapeAttrs.strokeDasharray
+              ? "虚线"
+              : "实线";
+            this.cellAttr.shape_strokeWidth = shapeAttrs.strokeWidth;
+            this.cellAttr.shape_stroke = shapeAttrs.stroke;
+            this.cellAttr.shape_fill =
+              shapeAttrs.fill === "none" ? null : shapeAttrs.fill;
+          }
+        } else {
+          //设置边
+          const lineAttrs = attrs.line;
+          if (lineAttrs) {
+            this.cellAttr.line_strokeDasharray = lineAttrs.strokeDasharray
+              ? "虚线"
+              : "实线";
+            this.cellAttr.line_strokeWidth = lineAttrs.strokeWidth;
+            this.cellAttr.line_stroke = lineAttrs.stroke;
           }
         }
-
-        // 设置旋转角度
-        this.attr.rotate = cell.getAngle();
-
-        // 设置shape的样式属性
-        const shape = cell.shape;
-        let attrs = cell.getAttrs();
-        let shapeAttrs = attrs && attrs[shape];
-        if (!shapeAttrs) shapeAttrs = attrs.body;
-        if (shapeAttrs) {
-          this.attr.shape_strokeDasharray = shapeAttrs.strokeDasharray
-            ? "虚线"
-            : "实线";
-          this.attr.shape_strokeWidth = shapeAttrs.strokeWidth;
-          this.attr.shape_stroke = shapeAttrs.stroke;
-          this.attr.shape_fill = shapeAttrs.fill;
-        }
-
         // 设置文本
-        let labelAttr = attrs.text;
-        if (labelAttr) {
-          this.attr.label = labelAttr.text;
-          this.attr.label_fontSize = labelAttr.fontSize;
-          this.attr.label_fill = labelAttr.fill;
+        let textAttr = attrs.text; //其他shape的label
+        if (shape === "edge") {
+          // 边的label
+          textAttr = this.getEdgeLabelAttr();
+        }
+        console.log(textAttr);
+        if (textAttr) {
+          this.cellAttr.text = textAttr.text;
+          this.cellAttr.text_fontSize = textAttr.fontSize;
+          this.cellAttr.text_fill = textAttr.fill;
           // 设置加粗，斜体，下划线
-          const styleKeyMaps = this.fontStyleKeyMaps;
+          const styleKeyMaps = fontStyleKeyMaps;
           const fontStyle = [];
           Object.keys(styleKeyMaps).forEach((styleKey) => {
-            if (labelAttr[styleKey] && labelAttr[styleKey] !== "none") {
+            if (textAttr[styleKey] && textAttr[styleKey] !== "none") {
               fontStyle.push(styleKey);
             }
           });
-          this.attr.label_fontStyle = fontStyle;
+          this.cellAttr.text_fontStyle = fontStyle;
           // 字体名
-          let fontFamily = labelAttr.fontFamily || "";
+          let fontFamily = textAttr.fontFamily || "";
           if (fontFamily) {
             fontFamily = fontFamily.split(", ");
             fontFamily = fontFamily[0] ? fontFamily[0] : "";
           }
-          this.attr.label_fontFamily = fontFamily;
-          console.log(this.attr);
+          this.cellAttr.text_fontFamily = fontFamily;
         }
       });
       // 点击空白画布cell 设置位null
@@ -391,14 +414,29 @@ export default {
         mutations.setCell(null);
       });
     },
+    // 获取边的label 的attr属性
+    getEdgeLabelAttr() {
+      const cell = state.cell;
+      let textAttr;
+      let labels = cell.getLabelAt(0);
+      if (!labels) {
+        labels = cell.getDefaultLabel();
+        textAttr = labels && labels.attrs && labels.attrs.text;
+      } else {
+        const label = labels.attrs.label.text;
+        textAttr = cell.getAttrs().text;
+        textAttr.text = label;
+      }
+      return textAttr || {};
+    },
     // 属性改变(x,y,width,height,rotate)
     boxChange(type, val) {
       // 设置宽高width,height
       if (["width", "height"].includes(type)) {
-        state.cell.resize(this.attr.width, this.attr.height);
+        state.cell.resize(this.cellAttr.width, this.cellAttr.height);
       } else if (["x", "y"].includes(type)) {
         //设置位置x，y
-        state.cell.position(this.attr.x, this.attr.y);
+        state.cell.position(this.cellAttr.x, this.cellAttr.y);
       } else if (type === "rotate") {
         // 设置旋转角度
         state.cell.rotate(val, { absolute: true });
@@ -406,26 +444,62 @@ export default {
     },
     // 属性样式改变
     styleChange(type, val) {
+      type = type.split("_")[1] || type;
       const shape = state.cell.shape;
       let prePath = shape;
       if (!state.cell.attrs[shape]) prePath = "body";
+      if (val === null) val = "none";
       state.cell.setAttrByPath(`${prePath}/${type}`, val);
     },
+
     // 文字属性样式改变
     textChange(type, val) {
-      if (type === "labelFontStyle") {
-        const styleKeyMaps = this.fontStyleKeyMaps;
-        Object.keys(styleKeyMaps).forEach((styleKey) => {
+      // 字体样式，粗体，斜体，等
+      if (type === "text_fontStyle") {
+        Object.keys(fontStyleKeyMaps).forEach((styleKey) => {
           if (val.includes(styleKey)) {
             state.cell.setAttrByPath(
               `text/${styleKey}`,
-              styleKeyMaps[styleKey]
+              fontStyleKeyMaps[styleKey]
             );
           } else {
             state.cell.setAttrByPath(`text/${styleKey}`, "none");
           }
         });
+      } else if (type === "text" && state.cell.shape === "edge") {
+        //设置边的label
+        state.cell.setLabels([val]);
       } else {
+        type = type.split("_")[1] || type;
+        state.cell.setAttrByPath(`text/${type}`, val);
+      }
+    },
+    // 边样式改变
+    edgeStyleChange(type, val) {
+      const [path, path2] = type.split("_");
+      if (val === null) val = "none";
+      state.cell.setAttrByPath(`${path}/${path2}`, val);
+    },
+    // 文字属性样式改变
+    edgeTextChange(type, val) {
+      // 字体样式，粗体，斜体，等
+      if (type === "text_fontStyle") {
+        Object.keys(fontStyleKeyMaps).forEach((styleKey) => {
+          if (val.includes(styleKey)) {
+            state.cell.setAttrByPath(
+              `text/${styleKey}`,
+              fontStyleKeyMaps[styleKey]
+            );
+          } else {
+            state.cell.setAttrByPath(`text/${styleKey}`, "none");
+          }
+        });
+      } else if (type === "text" && state.cell.shape === "edge") {
+        //设置边的label
+        state.cell.setLabels([val]);
+      } else {
+        type = type.split("_")[1] || type;
+        console.log(type);
         state.cell.setAttrByPath(`text/${type}`, val);
       }
     },
@@ -450,9 +524,9 @@ export default {
   padding: 0 5px 0 8px;
   color: #666;
   font-weight: 700;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 32px;
-  border-bottom: 1px solid #ededed;
+  /* border-bottom: 1px solid #ededed; */
 }
 
 /* 折叠面板 */
@@ -460,15 +534,15 @@ export default {
   border-top: 0;
 }
 .DetailsPanel /deep/ .el-collapse-item__header {
-  background-color: #ededed;
-  height: 32px;
-  line-height: 32px;
-  border-bottom: 1px solid #fff;
+  height: 40px;
+  line-height: 40px;
+  /* background-color: #ededed;
+  border-bottom: 1px solid #fff; */
 }
-.DetailsPanel /deep/ .el-collapse-item__wrap {
+/* .DetailsPanel /deep/ .el-collapse-item__wrap {
   background-color: inherit;
   border-bottom: 1px solid #fff;
-}
+} */
 /* 折叠面板的属性 */
 .attr-wrapper {
   padding: 10px 15px;
@@ -479,7 +553,6 @@ export default {
 .attr-wrapper .el-col-8 {
   display: flex;
   align-items: center;
-  height: 32px;
 }
 /* 表单类型 ui */
 .attr-wrapper /deep/ .el-input__inner {
@@ -487,20 +560,18 @@ export default {
   padding-right: 39px;
   padding-left: 10px;
 }
-.attr-wrapper /deep/ .el-input__inner,
-/* .attr-wrapper /deep/ .el-checkbox-button__inner, */
+/* .attr-wrapper /deep/ .el-input__inner,
 .attr-wrapper /deep/ .el-textarea__inner {
   border-color: transparent;
   background: transparent;
-}
-.attr-wrapper /deep/ .el-input-number:hover .el-input__inner,
+} */
+/* .attr-wrapper /deep/ .el-input-number:hover .el-input__inner,
 .attr-wrapper /deep/ .el-select:hover .el-input__inner,
 .attr-wrapper /deep/ .el-textarea:hover .el-textarea__inner,
-/* .attr-wrapper /deep/ .el-checkbox-button:hover .el-checkbox-button__inner, */
 .attr-wrapper /deep/ .el-input:hover .el-input__inner {
   border-color: #dcdfe6;
   background: #fff;
-}
+} */
 .attr-wrapper /deep/ .el-input-number__decrease,
 .attr-wrapper /deep/ .el-input-number__increase {
   opacity: 0;

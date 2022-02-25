@@ -1,9 +1,9 @@
 <!--
  * @Description: 工具栏
- * @FilePath: \x6topology\src\components\x6topology\components\Toolbar\Toolbar.vue
+ * @FilePath: \x6topology\src\components\X6topology\components\Toolbar\Toolbar.vue
  * @Date: 2022-01-05 09:55:08
  * @LastEditors: Lin_kangjing
- * @LastEditTime: 2022-01-19 15:24:21
+ * @LastEditTime: 2022-02-18 16:07:52
  * @author: Lin_kangjing
 -->
 <template>
@@ -14,54 +14,40 @@
       href="//at.alicdn.com/t/font_598462_3xve1872wizzolxr.css"
     />
     <el-button size="mini" :disabled="!canUndo" title="撤销" @click="undo">
-      <i class="command iconfont icon-undo"></i>
+      <svg-icon name="back"></svg-icon>
     </el-button>
     <el-button size="mini" :disabled="!canRedo" title="重做" @click="redo">
-      <i class="command iconfont icon-redo"></i>
+      <svg-icon name="next"></svg-icon>
     </el-button>
     <el-divider direction="vertical"></el-divider>
     <el-button size="mini" :disabled="!canCopy" title="复制" @click="copy">
-      <i data-command="copy" class="command iconfont icon-copy-o disable"></i>
+      <svg-icon name="copy"></svg-icon>
     </el-button>
     <el-button size="mini" title="粘贴" :disabled="!canPaste" @click="paste">
-      <i
-        data-command="paste"
-        class="command iconfont icon-paster-o disable"
-      ></i>
+      <svg-icon name="intersection"></svg-icon>
     </el-button>
     <el-button size="mini" title="删除" :disabled="!canDel" @click="del">
-      <i data-command="delete" class="command iconfont icon-delete-o"></i>
+      <svg-icon name="delete"></svg-icon>
     </el-button>
     <el-divider direction="vertical"></el-divider>
     <!-- <el-button size="mini">
-      <i
-        data-command="zoomIn"
-        class="command iconfont icon-zoom-in-o"
-        title="放大"
-      ></i>
+      <svg-icon name="next"></svg-icon>
     </el-button>
     <el-button size="mini">
-      <i
-        data-command="zoomOut"
-        class="command iconfont icon-zoom-out-o"
-        title="缩小"
-      ></i>
+     <svg-icon name="next"></svg-icon>
     </el-button> -->
     <el-button size="mini" title="适应画布" :disabled="!canFit" @click="fit">
-      <i data-command="autoZoom" class="command iconfont icon-fit"></i>
+      <svg-icon name="auto-width-one"></svg-icon>
     </el-button>
     <el-button size="mini" title="实际尺寸" :disabled="!canZoom" @click="zoom">
-      <i
-        data-command="resetZoom"
-        class="command iconfont icon-actual-size-o"
-      ></i>
+      <svg-icon name="auto-line-height"></svg-icon>
     </el-button>
     <el-button
       size="mini"
       title="将画布内容中心与视口中心对齐"
       @click="centerContent"
     >
-      <i data-command="resetZoom" class="command el-icon-coordinate"></i>
+      <svg-icon name="alignment-vertical-center"></svg-icon>
     </el-button>
     <el-divider direction="vertical"></el-divider>
     <el-button
@@ -70,7 +56,7 @@
       :disabled="!canToFront"
       @click="toFront"
     >
-      <i data-command="toFront" class="command iconfont icon-to-front"></i>
+      <svg-icon name="bring-to-front"></svg-icon>
     </el-button>
     <el-button
       size="mini"
@@ -78,7 +64,7 @@
       :disabled="!canToBack"
       @click="toBack"
     >
-      <i data-command="toBack" class="command iconfont icon-to-back"></i>
+      <svg-icon name="sent-to-back"></svg-icon>
     </el-button>
     <el-divider direction="vertical"></el-divider>
     <el-button
@@ -87,7 +73,7 @@
       :disabled="!canMultiSelect"
       @click="multiSelect"
     >
-      <i data-command="multiSelect" class="command iconfont icon-select"></i>
+      <svg-icon name="checkbox"></svg-icon>
     </el-button>
     <el-button
       size="mini"
@@ -95,7 +81,7 @@
       :disabled="!canInGroup"
       @click="inGroup"
     >
-      <i data-command="addGroup" class="command iconfont icon-group"></i>
+      <svg-icon name="group"></svg-icon>
     </el-button>
     <el-button
       size="mini"
@@ -103,10 +89,7 @@
       :disabled="!canUnGroup"
       @click="unGroup"
     >
-      <i
-        data-command="unGroup"
-        class="command iconfont icon-ungroup disable"
-      ></i>
+      <svg-icon name="ungroup"></svg-icon>
     </el-button>
     <!-- <el-button @click="consoleData" type="primary">控制台输出数据</el-button> -->
   </div>
@@ -304,7 +287,7 @@ export default {
 </script>
 <style>
 /* 主题 */
-.grey-theme .toolbar {
+/* .grey-theme .toolbar {
   border: none !important;
   box-shadow: none !important;
 }
@@ -314,7 +297,7 @@ export default {
 }
 .grey-theme .toolbar .el-button:hover {
   background-color: #ededed !important;
-}
+} */
 </style>
 
 <style scoped>
@@ -326,35 +309,13 @@ export default {
   padding: 0 12px;
   height: 40px;
   width: 100%;
-  border: 1px solid #e9e9e9;
+  /* border: 1px solid #e9e9e9;
   border-bottom: 0;
-  box-shadow: 0px 8px 12px 0px rgba(0, 52, 107, 0.04);
+  box-shadow: 0px 8px 12px 0px rgba(0, 52, 107, 0.04); */
 }
 .toolbar .el-button {
   margin: 4px 4px 5px 0;
   padding: 5px 8px;
   border-color: #fff;
 }
-
-/* .toolbar .command {
-  box-sizing: border-box;
-  width: 27px;
-  height: 27px;
-  margin: 0px 6px;
-  border-radius: 2px;
-  padding-left: 4px;
-  display: inline-block;
-  border: 1px solid rgba(2, 2, 2, 0);
-}
-.toolbar .command:hover {
-  cursor: pointer;
-  border: 1px solid #e9e9e9;
-}
-.toolbar .disable {
-  color: rgba(0, 0, 0, 0.25);
-}
-.toolbar .separator {
-  margin: 4px;
-  border-left: 1px solid #e9e9e9;
-} */
 </style>

@@ -3,7 +3,7 @@
  * @FilePath: \x6topology\src\main.js
  * @Date: 2021-12-28 17:30:47
  * @LastEditors: Lin_kangjing
- * @LastEditTime: 2021-12-29 09:09:02
+ * @LastEditTime: 2022-02-16 10:44:16
  * @author: Lin_kangjing
  */
 import Vue from "vue";
@@ -13,6 +13,8 @@ import store from "./store";
 // 引入element ui
 import ElementUI from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
+// svg图标
+import "./assets/svgIcon";
 Vue.use(ElementUI);
 
 Vue.config.productionTip = false;

@@ -3,15 +3,19 @@
  * @FilePath: \x6topology\src\components\x6topology\Index.vue
  * @Date: 2021-12-29 09:10:16
  * @LastEditors: Lin_kangjing
- * @LastEditTime: 2022-01-20 09:11:05
+ * @LastEditTime: 2022-02-16 15:17:00
  * @author: Lin_kangjing
 -->
 <template>
-  <div class="topology grey-theme">
+  <!-- grey-theme -->
+  <div class="topology">
     <div id="header"><Toolbar></Toolbar></div>
 
     <div id="container">
-      <div id="left"><NodePanel></NodePanel></div>
+      <div id="left">
+        <!-- <NodePanel></NodePanel> -->
+        <EquipmentListPanel></EquipmentListPanel>
+      </div>
       <div id="center">
         <CanvasPanel></CanvasPanel>
       </div>
@@ -26,9 +30,11 @@ import("./common/index");
 export default {
   components: {
     Toolbar: () => import("./components/Toolbar/Toolbar.vue"),
-    NodePanel: () => import("./components/NodePanel/NodePanel.vue"),
+    // NodePanel: () => import("./components/NodePanel/NodePanel.vue"),
+    EquipmentListPanel: () =>
+      import("./components/NodePanel/EquipmentListPanel"),
+    CanvasPanel: () => import("./components/CanvasPanel/CanvasPanel"),
     DetailsPanel: () => import("./components/DetailsPanel/DetailsPanel.vue"),
-    CanvasPanel: () => import("./components/CanvasPanel/CanvasPanel.vue"),
   },
   data() {
     return {};
@@ -64,33 +70,37 @@ export default {
 
 /* 正常css设置 */
 .topology {
+  display: flex;
+  flex-direction: column;
   height: 100%;
+  overflow: hidden;
   text-align: left;
+  border: 1px solid #eee;
+}
+#header {
+  position: relative;
+  z-index: 1;
+  height: 40px;
+  box-shadow: 0 2px 4px #dad7d7;
 }
 #container {
+  flex: 1;
+  overflow-x: hidden;
   display: flex;
-  height: 100%;
 }
 #center {
   flex: 1 1 100%;
 }
+
 #left,
 #right {
   flex: 0 0 230px;
+  /* box-shadow: 0 2px 4px #dad7d7; */
 }
-
-/* 
-.el-aside {
-  border: 1px solid #e9e9e9;
-  border-right: 0;
-  box-shadow: 8px 0px 12px 0px rgba(0, 52, 107, 0.04);
-  border-top: 0;
+#left {
+  border-right: 1px solid #ddd;
 }
-.details-panel-wrapper {
-  overflow: auto;
-  box-sizing: border-box;
-  border: 1px solid #e9e9e9;
-  box-shadow: -8px 0px 12px 0px rgba(0, 52, 107, 0.04);
-  border-top: 0;
-} */
+#right {
+  border-left: 1px solid #ddd;
+}
 </style>

@@ -3,11 +3,11 @@
  * @FilePath: \x6topology\src\components\x6topology\components\NodePanel\NodePanel.vue
  * @Date: 2022-01-06 09:10:27
  * @LastEditors: Lin_kangjing
- * @LastEditTime: 2022-01-21 14:58:24
+ * @LastEditTime: 2022-02-18 09:20:27
  * @author: Lin_kangjing
 -->
 <template>
-  <div id="NodePanel" class="NodePanel"></div>
+  <div ref="NodePanel" class="NodePanel"></div>
 </template>
 
 <script>
@@ -57,7 +57,7 @@ export default {
           },
         ],
       });
-      document.getElementById("NodePanel").appendChild(stencil.container);
+      this.$refs.NodePanel.appendChild(stencil.container);
       // 加载侧边栏的项
       this.loadStencilItem(stencil);
     },
