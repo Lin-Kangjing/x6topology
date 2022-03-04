@@ -1,14 +1,16 @@
 /*
  * @Description:拓扑图内部状态管理
- * @FilePath: \x6topology\src\components\x6topology\store.js
+ * @FilePath: \x6topology\src\components\X6topology\store.js
  * @Date: 2022-01-06 10:45:20
  * @LastEditors: Lin_kangjing
- * @LastEditTime: 2022-01-17 14:28:14
+ * @LastEditTime: 2022-03-04 15:32:23
  * @author: Lin_kangjing
  */
 
 import Vue from "vue";
 export const state = Vue.observable({
+  el: "x6topology",
+  // 拓扑图对象
   g: null,
   history: null,
   // 单元（节点或边

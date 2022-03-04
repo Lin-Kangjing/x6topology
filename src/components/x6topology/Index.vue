@@ -1,16 +1,15 @@
 <!--
  * @Description: 拓扑图插件
- * @FilePath: \x6topology\src\components\x6topology\Index.vue
+ * @FilePath: \x6topology\src\components\X6topology\Index.vue
  * @Date: 2021-12-29 09:10:16
  * @LastEditors: Lin_kangjing
- * @LastEditTime: 2022-02-16 15:17:00
+ * @LastEditTime: 2022-03-03 09:40:46
  * @author: Lin_kangjing
 -->
 <template>
   <!-- grey-theme -->
   <div class="topology">
     <div id="header"><Toolbar></Toolbar></div>
-
     <div id="container">
       <div id="left">
         <!-- <NodePanel></NodePanel> -->
@@ -21,6 +20,8 @@
       </div>
       <div id="right"><DetailsPanel></DetailsPanel></div>
     </div>
+    <!-- 右键菜单 -->
+    <ContextMenu></ContextMenu>
   </div>
 </template>
 
@@ -29,12 +30,13 @@
 import("./common/index");
 export default {
   components: {
-    Toolbar: () => import("./components/Toolbar/Toolbar.vue"),
-    // NodePanel: () => import("./components/NodePanel/NodePanel.vue"),
+    Toolbar: () => import("./components/Toolbar/Toolbar"),
+    // NodePanel: () => import("./components/NodePanel/NodePanel"),
     EquipmentListPanel: () =>
       import("./components/NodePanel/EquipmentListPanel"),
     CanvasPanel: () => import("./components/CanvasPanel/CanvasPanel"),
-    DetailsPanel: () => import("./components/DetailsPanel/DetailsPanel.vue"),
+    DetailsPanel: () => import("./components/DetailsPanel/DetailsPanel"),
+    ContextMenu: () => import("./components/ContextMenu/ContextMenu"),
   },
   data() {
     return {};

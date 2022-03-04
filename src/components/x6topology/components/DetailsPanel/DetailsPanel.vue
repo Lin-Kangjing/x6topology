@@ -3,7 +3,7 @@
  * @FilePath: \x6topology\src\components\x6topology\components\DetailsPanel\DetailsPanel.vue
  * @Date: 2022-01-06 09:46:14
  * @LastEditors: Lin_kangjing
- * @LastEditTime: 2022-02-25 17:29:55
+ * @LastEditTime: 2022-03-03 09:42:15
  * @author: Lin_kangjing
 -->
 <template>
@@ -143,7 +143,7 @@ export default {
   components: {},
   data() {
     return {
-      active: ["文本"],
+      active: ["标签"],
       gutter: 15,
       size: "small",
       cellAttr: getInitCellAttr(), //节点边属性
@@ -209,7 +209,7 @@ export default {
           ],
         },
         {
-          name: "文本",
+          name: "标签",
           changeFn: this.textChange,
           attrs: [
             {
@@ -343,9 +343,9 @@ export default {
         this.cellAttr = getInitCellAttr();
         let attrs = cell.getAttrs();
         const shape = cell.shape;
-
         // 设置节点
         if (cell.isNode()) {
+          this.active = [this.nodePanel[0].name];
           // 设置x,y,width,height
           const box = cell.getBBox();
           for (const key in this.cellAttr) {
@@ -370,6 +370,7 @@ export default {
               shapeAttrs.fill === "none" ? null : shapeAttrs.fill;
           }
         } else {
+          this.active = [this.edgePanel[0].name];
           //设置边
           const lineAttrs = attrs.line;
           if (lineAttrs) {
@@ -530,9 +531,9 @@ export default {
 }
 
 /* 折叠面板 */
-.el-collapse {
+/* .el-collapse {
   border-top: 0;
-}
+} */
 .DetailsPanel /deep/ .el-collapse-item__header {
   height: 40px;
   line-height: 40px;
@@ -547,12 +548,12 @@ export default {
 .attr-wrapper {
   padding: 10px 15px;
 }
-.attr-wrapper .el-col {
-  margin: 3px 0;
-}
-.attr-wrapper .el-col-8 {
+.attr-wrapper .el-row {
   display: flex;
   align-items: center;
+}
+.attr-wrapper .el-col {
+  margin: 3px 0;
 }
 /* 表单类型 ui */
 .attr-wrapper /deep/ .el-input__inner {
@@ -560,18 +561,18 @@ export default {
   padding-right: 39px;
   padding-left: 10px;
 }
-/* .attr-wrapper /deep/ .el-input__inner,
+.attr-wrapper /deep/ .el-input__inner,
 .attr-wrapper /deep/ .el-textarea__inner {
   border-color: transparent;
   background: transparent;
-} */
-/* .attr-wrapper /deep/ .el-input-number:hover .el-input__inner,
+}
+.attr-wrapper /deep/ .el-input-number:hover .el-input__inner,
 .attr-wrapper /deep/ .el-select:hover .el-input__inner,
 .attr-wrapper /deep/ .el-textarea:hover .el-textarea__inner,
 .attr-wrapper /deep/ .el-input:hover .el-input__inner {
   border-color: #dcdfe6;
   background: #fff;
-} */
+}
 .attr-wrapper /deep/ .el-input-number__decrease,
 .attr-wrapper /deep/ .el-input-number__increase {
   opacity: 0;

@@ -3,11 +3,11 @@
  * @FilePath: \x6topology\src\components\X6topology\components\CanvasPanel\CanvasPanel.vue
  * @Date: 2022-01-06 09:27:50
  * @LastEditors: Lin_kangjing
- * @LastEditTime: 2022-02-24 16:30:50
+ * @LastEditTime: 2022-03-04 15:58:33
  * @author: Lin_kangjing
 -->
 <template>
-  <div id="x6topology" class="x6topology"></div>
+  <div :id="el" class="x6topology"></div>
 </template>
 
 <script>
@@ -20,6 +20,11 @@ export default {
   data() {
     return {};
   },
+  computed: {
+    el() {
+      return state.el;
+    },
+  },
   created() {},
   mounted() {
     this.$nextTick(() => {
@@ -28,7 +33,7 @@ export default {
   },
   methods: {
     init() {
-      const el = document.getElementById("x6topology");
+      const el = document.getElementById(this.el);
       const minimapEl = document.getElementById("minimap");
       const g = new Graph({
         container: el,
