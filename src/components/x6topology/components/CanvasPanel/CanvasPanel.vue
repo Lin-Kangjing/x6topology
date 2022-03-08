@@ -3,11 +3,11 @@
  * @FilePath: \x6topology\src\components\X6topology\components\CanvasPanel\CanvasPanel.vue
  * @Date: 2022-01-06 09:27:50
  * @LastEditors: Lin_kangjing
- * @LastEditTime: 2022-03-04 15:58:33
+ * @LastEditTime: 2022-03-08 14:23:31
  * @author: Lin_kangjing
 -->
 <template>
-  <div :id="el" class="x6topology"></div>
+  <div id="x6topology" class="x6topology"></div>
 </template>
 
 <script>
@@ -20,11 +20,7 @@ export default {
   data() {
     return {};
   },
-  computed: {
-    el() {
-      return state.el;
-    },
-  },
+  computed: {},
   created() {},
   mounted() {
     this.$nextTick(() => {
@@ -33,7 +29,7 @@ export default {
   },
   methods: {
     init() {
-      const el = document.getElementById(this.el);
+      const el = document.getElementById("x6topology");
       const minimapEl = document.getElementById("minimap");
       const g = new Graph({
         container: el,
@@ -226,16 +222,16 @@ export default {
     // 开启双击文本节点编辑
     textNodeEdit() {
       state.g.on("node:dblclick", ({ cell, e }) => {
-        cell.shape === "text-block" &&
-          cell.addTools({
-            name: "node-editor",
-            args: {
-              event: e,
-              setText: ({ cell, value }) => {
-                cell.setAttrs({ label: { text: value } });
-              },
-            },
-          });
+        // cell.shape === "text-block" &&
+        cell.addTools({
+          name: "node-editor",
+          args: {
+            event: e,
+            // setText: ({ cell, value }) => {
+            //   cell.setAttrs({ label: { text: value } });
+            // },
+          },
+        });
       });
     },
   },

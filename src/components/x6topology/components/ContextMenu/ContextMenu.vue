@@ -3,56 +3,73 @@
  * @FilePath: \x6topology\src\components\X6topology\components\ContextMenu\ContextMenu.vue
  * @Date: 2022-02-28 11:13:35
  * @LastEditors: Lin_kangjing
- * @LastEditTime: 2022-03-04 16:15:14
+ * @LastEditTime: 2022-03-08 16:45:28
  * @author: Lin_kangjing
 -->
 <template>
   <div class="ContextMenu">
-    <Contextmenu ref="Contextmenu">
-      <Contextmenu-item>菜单1</Contextmenu-item>
-      <Contextmenu-item>菜单2</Contextmenu-item>
-      <Contextmenu-item>菜单3</Contextmenu-item>
-
-      <Contextmenu-submenu title="子菜单">
-        <Contextmenu-item>菜单4</Contextmenu-item>
-
-        <Contextmenu-item divider></Contextmenu-item>
-
-        <Contextmenu-submenu title="子菜单">
-          <Contextmenu-item>菜单5</Contextmenu-item>
-        </Contextmenu-submenu>
-      </Contextmenu-submenu>
+    <Contextmenu ref="Contextmenu" autoPlacement @hide="hideHandler">
+      <template v-for="item in menus">
+        <Contextmenu-item
+          v-if="item.divider"
+          :key="item.name + 1"
+          divider
+        ></Contextmenu-item>
+        <Contextmenu-item
+          :key="item.name"
+          :disabled="!disabled(item.opt)"
+          @click="(vm, e) => clickHandler(vm, e, item.opt)"
+          >{{ item.name }}</Contextmenu-item
+        >
+      </template>
     </Contextmenu>
   </div>
 </template>
 
 <script>
 import bus from "../../utils/bus";
-import { state } from "../../store";
+import { state, mutations } from "../../store";
 import {
-  directive,
   Contextmenu,
   ContextmenuItem,
-  ContextmenuSubmenu,
+  // ContextmenuSubmenu,
   // ContextmenuGroup,
 } from "v-contextmenu";
+import "v-contextmenu/dist/index.css";
 
-import * as a from "v-contextmenu";
-console.log(a);
 export default {
   components: {
     Contextmenu,
     ContextmenuItem,
-    ContextmenuSubmenu,
+    // ContextmenuSubmenu,
     // ContextmenuGroup,
-  },
-  directives: {
-    contextmenu: directive,
   },
   data() {
     return {
-      isShow: false,
+      menus: Object.freeze([
+        { name: "层级前置", opt: "toFront", divider: false },
+        { name: "层级后置", opt: "toBack", divider: false },
+        { name: "删除", opt: "del", divider: true },
+        { name: "撤销", opt: "undo", divider: true },
+        { name: "恢复", opt: "redo", divider: false },
+        { name: "复制", opt: "copy", divider: true },
+        { name: "粘贴", opt: "paste", divider: false },
+      ]),
+      cell: null,
     };
+  },
+  computed: {
+    // 是否可以操作
+    disabled() {
+      return (opt) => {
+        if (["undo", "redo", "paste"].includes(opt)) {
+          opt = opt.slice(0, 1).toUpperCase() + opt.slice(1);
+          return state[`can${opt}`];
+        } else {
+          return true;
+        }
+      };
+    },
   },
   created() {},
   mounted() {
@@ -63,22 +80,48 @@ export default {
   },
   methods: {
     init() {
-      state.g.on("cell:contextmenu", ({ e }) => {
-        console.log(123);
-        console.log(e);
-        // const target = document
-        //   .getElementById(state.el)
-        //   .getBoundingClientRect();
-        // const postition = {
-        //   top: Math.random() * target.height + target.top,
-        //   left: Math.random() * target.width + target.left,
-        // };
-        console.log(this.$refs.Contextmenu);
-        this.$refs.Contextmenu.show();
+      // eslint-disable-next-line no-unused-vars
+      state.g.on("cell:contextmenu", ({ e, x, y, cell }) => {
+        const postition = {
+          top: e.pageY,
+          left: e.pageX,
+        };
+        this.$refs.Contextmenu.show(postition);
+        this.cell = cell;
       });
+    },
+    hideHandler() {
+      // this.cell
+    },
+    // 菜单点击事件
+    clickHandler(vm, e, type) {
+      switch (type) {
+        case "copy":
+          mutations.copy([this.cell]);
+          break;
+        case "del":
+          state.g.removeCells([this.cell]);
+          break;
+        case "toFront":
+          this.cell.toFront();
+          break;
+        case "toBack":
+          this.cell.toBack();
+          break;
+        default:
+          mutations[type]();
+      }
     },
   },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.v-contextmenu-item {
+  min-width: 160px;
+  line-height: 22px;
+}
+.v-contextmenu .v-contextmenu-item.v-contextmenu-item--disabled {
+  background-color: inherit;
+}
+</style>

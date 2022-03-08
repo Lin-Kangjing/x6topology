@@ -3,7 +3,7 @@
  * @FilePath: \x6topology\src\components\X6topology\components\NodePanel\EquipmentListPanel.vue
  * @Date: 2022-02-16 11:35:35
  * @LastEditors: Lin_kangjing
- * @LastEditTime: 2022-02-18 15:55:42
+ * @LastEditTime: 2022-03-08 17:04:50
  * @author: Lin_kangjing
 -->
 <template>
@@ -19,7 +19,7 @@
         </el-input>
       </div>
 
-      <el-collapse v-model="collapseActive">
+      <el-collapse v-model="collapseActive" accordion>
         <el-collapse-item title="资源资产" name="1">
           <div class="node-wrap">
             <div

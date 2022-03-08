@@ -3,7 +3,7 @@
  * @FilePath: \x6topology\src\components\X6topology\components\Toolbar\Toolbar.vue
  * @Date: 2022-01-05 09:55:08
  * @LastEditors: Lin_kangjing
- * @LastEditTime: 2022-02-18 16:07:52
+ * @LastEditTime: 2022-03-08 17:01:59
  * @author: Lin_kangjing
 -->
 <template>
@@ -14,40 +14,36 @@
       href="//at.alicdn.com/t/font_598462_3xve1872wizzolxr.css"
     />
     <el-button size="mini" :disabled="!canUndo" title="撤销" @click="undo">
-      <svg-icon name="back"></svg-icon>
+      <svg class="iconpark-icon"><use href="#back"></use></svg>
     </el-button>
-    <el-button size="mini" :disabled="!canRedo" title="重做" @click="redo">
-      <svg-icon name="next"></svg-icon>
+    <el-button size="mini" :disabled="!canRedo" title="恢复" @click="redo">
+      <svg class="iconpark-icon"><use href="#next"></use></svg>
     </el-button>
     <el-divider direction="vertical"></el-divider>
     <el-button size="mini" :disabled="!canCopy" title="复制" @click="copy">
-      <svg-icon name="copy"></svg-icon>
+      <svg class="iconpark-icon"><use href="#copy"></use></svg>
     </el-button>
     <el-button size="mini" title="粘贴" :disabled="!canPaste" @click="paste">
-      <svg-icon name="intersection"></svg-icon>
+      <svg class="iconpark-icon"><use href="#intersection"></use></svg>
     </el-button>
     <el-button size="mini" title="删除" :disabled="!canDel" @click="del">
-      <svg-icon name="delete"></svg-icon>
+      <svg class="iconpark-icon"><use href="#delete"></use></svg>
     </el-button>
     <el-divider direction="vertical"></el-divider>
-    <!-- <el-button size="mini">
-      <svg-icon name="next"></svg-icon>
-    </el-button>
-    <el-button size="mini">
-     <svg-icon name="next"></svg-icon>
-    </el-button> -->
     <el-button size="mini" title="适应画布" :disabled="!canFit" @click="fit">
-      <svg-icon name="auto-width-one"></svg-icon>
+      <svg class="iconpark-icon"><use href="#auto-width-one"></use></svg>
     </el-button>
     <el-button size="mini" title="实际尺寸" :disabled="!canZoom" @click="zoom">
-      <svg-icon name="auto-line-height"></svg-icon>
+      <svg class="iconpark-icon"><use href="#auto-line-height"></use></svg>
     </el-button>
     <el-button
       size="mini"
       title="将画布内容中心与视口中心对齐"
       @click="centerContent"
     >
-      <svg-icon name="alignment-vertical-center"></svg-icon>
+      <svg class="iconpark-icon">
+        <use href="#alignment-vertical-center"></use>
+      </svg>
     </el-button>
     <el-divider direction="vertical"></el-divider>
     <el-button
@@ -56,7 +52,7 @@
       :disabled="!canToFront"
       @click="toFront"
     >
-      <svg-icon name="bring-to-front"></svg-icon>
+      <svg class="iconpark-icon"><use href="#bring-to-front"></use></svg>
     </el-button>
     <el-button
       size="mini"
@@ -64,7 +60,7 @@
       :disabled="!canToBack"
       @click="toBack"
     >
-      <svg-icon name="sent-to-back"></svg-icon>
+      <svg class="iconpark-icon"><use href="#sent-to-back"></use></svg>
     </el-button>
     <el-divider direction="vertical"></el-divider>
     <el-button
@@ -73,7 +69,7 @@
       :disabled="!canMultiSelect"
       @click="multiSelect"
     >
-      <svg-icon name="checkbox"></svg-icon>
+      <svg class="iconpark-icon"><use href="#checkbox"></use></svg>
     </el-button>
     <el-button
       size="mini"
@@ -81,7 +77,7 @@
       :disabled="!canInGroup"
       @click="inGroup"
     >
-      <svg-icon name="group"></svg-icon>
+      <svg class="iconpark-icon"><use href="#group"></use></svg>
     </el-button>
     <el-button
       size="mini"
@@ -89,199 +85,86 @@
       :disabled="!canUnGroup"
       @click="unGroup"
     >
-      <svg-icon name="ungroup"></svg-icon>
+      <svg class="iconpark-icon"><use href="#ungroup"></use></svg>
     </el-button>
     <!-- <el-button @click="consoleData" type="primary">控制台输出数据</el-button> -->
   </div>
 </template>
 
 <script>
-import bus from "../../utils/bus";
-import { state } from "../../store";
+import { state, mutations } from "../../store";
 export default {
   components: {},
   data() {
-    return {
-      canUndo: false,
-      canRedo: false,
-      canCopy: false,
-      canPaste: true,
-      canDel: false,
-      canFit: true,
-      canZoom: true,
-      canToFront: false,
-      canToBack: false,
-      canMultiSelect: true,
-      canInGroup: false,
-      canUnGroup: false,
-    };
+    return {};
+  },
+  computed: {
+    canUndo() {
+      return state.canUndo;
+    },
+    canRedo() {
+      return state.canRedo;
+    },
+    canCopy() {
+      return state.canCopy;
+    },
+    canPaste() {
+      return state.canPaste;
+    },
+    canDel() {
+      return state.canDel;
+    },
+    canFit() {
+      return state.canFit;
+    },
+    canZoom() {
+      return state.canZoom;
+    },
+    canToFront() {
+      return state.canToFront;
+    },
+    canToBack() {
+      return state.canToBack;
+    },
+    canMultiSelect() {
+      return state.canMultiSelect;
+    },
+    canInGroup() {
+      return state.canInGroup;
+    },
+    canUnGroup() {
+      return state.canUnGroup;
+    },
   },
   created() {},
-  mounted() {
-    bus.$on("init", this.init);
-    this.$on("hook:beforeDestroy", () => {
-      bus.$off("init");
-    });
-  },
+  mounted() {},
   methods: {
-    init() {
-      // 历史记录栈记录长度变更
-      state.g.history.on("change", () => {
-        this.canUndo = state.g.history.canUndo();
-        this.canRedo = state.g.history.canRedo();
-      });
-      // 选中的节点/边发生改变(增删)时触发。
-      state.g.on("selection:changed", ({ selected }) => {
-        // selected 被选中的节点/边
-        if (selected.length > 0) {
-          this.canCopy = true;
-          this.canDel = true;
-          this.canToFront = true;
-          this.canToBack = true;
-          this.canInGroup = true;
-        } else {
-          this.canCopy = false;
-          this.canDel = false;
-          this.canToFront = false;
-          this.canToBack = false;
-          this.canInGroup = false;
-        }
-        // 如果节点的shape==='group'则可以解组
-        let canUnGroup = false;
-        selected.forEach((cell) => {
-          if (cell.shape === "group") {
-            canUnGroup = true;
-          }
-        });
-        this.canUnGroup = canUnGroup;
-      });
-      // 点击空白画布触发
-      state.g.on("blank:click", () => {
-        this.canMultiSelect = true;
-        state.g.setRubberbandModifiers("ctrl");
-      });
-      // 分组折叠
-      state.g.on("node:collapse", ({ node }) => {
-        node.toggleCollapse();
-        const collapsed = node.isCollapsed();
-        const collapse = (parent) => {
-          const cells = parent.getChildren();
-          if (cells) {
-            cells.forEach((cell) => {
-              if (collapsed) {
-                cell.hide();
-              } else {
-                cell.show();
-              }
-              if (cell.shape === "group") {
-                if (!cell.isCollapsed()) {
-                  collapse(cell);
-                }
-              }
-            });
-          }
-        };
-        collapse(node);
-      });
-    },
     // 撤销
-    undo() {
-      state.g.history.undo();
-    },
+    undo: mutations.undo,
     // 重做
-    redo() {
-      state.g.history.redo();
-    },
+    redo: mutations.redo,
     // 复制
-    copy() {
-      const cells = state.g.getSelectedCells();
-      if (cells.length) {
-        state.g.copy(cells);
-      }
-    },
+    copy: mutations.copy,
     // 粘贴
-    paste() {
-      if (!state.g.isClipboardEmpty()) {
-        const cells = state.g.paste({ offset: 32 });
-        state.g.cleanSelection();
-        state.g.select(cells);
-      }
-    },
+    paste: mutations.paste,
     // 删除
-    del() {
-      const cells = state.g.getSelectedCells();
-      if (cells.length) {
-        state.g.removeCells(cells);
-      }
-    },
+    del: mutations.del,
     // 适应画布
-    fit() {
-      state.g.zoomToFit();
-      console.log(state.g.zoom());
-    },
+    fit: mutations.fit,
     // 缩放画布成正常大小
-    zoom() {
-      state.g.zoom(1, {
-        absolute: true,
-      });
-    },
+    zoom: mutations.zoom,
     // 将画布内容中心与视口中心对齐
-    centerContent() {
-      state.g.centerContent();
-    },
+    centerContent: mutations.centerContent,
     // 将节点/边移到最顶层。
-    toFront() {
-      const cells = state.g.getSelectedCells();
-      if (cells.length) {
-        cells.forEach((cell) => {
-          cell.toFront();
-        });
-      }
-    },
+    toFront: mutations.toFront,
     // 将节点/边移到最底层。
-    toBack() {
-      const cells = state.g.getSelectedCells();
-      if (cells.length) {
-        cells.forEach((cell) => {
-          cell.toBack();
-        });
-      }
-    },
+    toBack: mutations.toBack,
     // 开启鼠标左键多选
-    multiSelect() {
-      state.g.setRubberbandModifiers(null);
-      this.canMultiSelect = false;
-    },
+    multiSelect: mutations.multiSelect,
     // 成组
-    inGroup() {
-      const cells = state.g.getSelectedCells();
-      if (cells.length) {
-        const group = state.g.addNode({
-          shape: "group",
-        });
-
-        // 把节点添加到分组
-        cells.forEach((cell) => {
-          group.addChild(cell);
-        });
-        group.fit({ padding: 30 });
-      }
-    },
+    inGroup: mutations.inGroup,
     // 解组
-    unGroup() {
-      const cells = state.g.getSelectedCells();
-      if (cells.length) {
-        cells.forEach((group) => {
-          if (group.shape === "group") {
-            group.children &&
-              group.children.forEach((cell) => {
-                group.unembed(cell);
-              });
-            state.g.removeNode(group);
-          }
-        });
-      }
-    },
+    unGroup: mutations.unGroup,
   },
 };
 </script>

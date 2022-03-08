@@ -1,9 +1,9 @@
 <!--
  * @Description: 详情面板
- * @FilePath: \x6topology\src\components\x6topology\components\DetailsPanel\DetailsPanel.vue
+ * @FilePath: \x6topology\src\components\X6topology\components\DetailsPanel\DetailsPanel.vue
  * @Date: 2022-01-06 09:46:14
  * @LastEditors: Lin_kangjing
- * @LastEditTime: 2022-03-03 09:42:15
+ * @LastEditTime: 2022-03-08 17:07:33
  * @author: Lin_kangjing
 -->
 <template>
@@ -11,7 +11,7 @@
     <div id="minimap" class="minimap"></div>
     <div v-if="cell" class="info">
       <!-- <div class="title-bar">模型信息</div> -->
-      <el-collapse v-model="active">
+      <el-collapse v-model="active" accordion>
         <el-collapse-item
           v-for="item in detailsPanel"
           :key="item.name"
@@ -77,7 +77,9 @@
                     :key="font.title"
                     :label="font.styleKey"
                   >
-                    <svg-icon :name="font.icon"></svg-icon>
+                    <svg class="iconpark-icon">
+                      <use :href="'#' + font.icon"></use>
+                    </svg>
                   </el-checkbox-button>
                 </el-checkbox-group>
                 <!-- 文字内容 -->
@@ -387,7 +389,6 @@ export default {
           // 边的label
           textAttr = this.getEdgeLabelAttr();
         }
-        console.log(textAttr);
         if (textAttr) {
           this.cellAttr.text = textAttr.text;
           this.cellAttr.text_fontSize = textAttr.fontSize;

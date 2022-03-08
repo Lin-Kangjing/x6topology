@@ -3,7 +3,7 @@
  * @FilePath: \x6topology\src\components\X6topology\Index.vue
  * @Date: 2021-12-29 09:10:16
  * @LastEditors: Lin_kangjing
- * @LastEditTime: 2022-03-03 09:40:46
+ * @LastEditTime: 2022-03-08 17:09:06
  * @author: Lin_kangjing
 -->
 <template>
@@ -16,16 +16,18 @@
         <EquipmentListPanel></EquipmentListPanel>
       </div>
       <div id="center">
-        <CanvasPanel></CanvasPanel>
+        <CanvasPanel ref="CanvasPanel"></CanvasPanel>
+        <!-- 右键菜单 -->
+        <ContextMenu></ContextMenu>
       </div>
       <div id="right"><DetailsPanel></DetailsPanel></div>
     </div>
-    <!-- 右键菜单 -->
-    <ContextMenu></ContextMenu>
   </div>
 </template>
 
 <script>
+// 注册图标
+import("./utils/svgIcon");
 // 注册节点
 import("./common/index");
 export default {
@@ -35,22 +37,31 @@ export default {
     EquipmentListPanel: () =>
       import("./components/NodePanel/EquipmentListPanel"),
     CanvasPanel: () => import("./components/CanvasPanel/CanvasPanel"),
-    DetailsPanel: () => import("./components/DetailsPanel/DetailsPanel"),
     ContextMenu: () => import("./components/ContextMenu/ContextMenu"),
+    DetailsPanel: () => import("./components/DetailsPanel/DetailsPanel"),
   },
   data() {
     return {};
   },
   created() {},
   mounted() {},
-  methods: {},
+  methods: {
+    init() {
+      this.$nextTick(() => {
+        this.$refs.CanvasPanel.init();
+      });
+    },
+  },
 };
 </script>
 
 <style>
 .iconpark-icon {
-  width: 1em;
-  height: 1em;
+  width: 1.2em;
+  height: 1.2em;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
 }
 /* 灰色主题 */
 .grey-theme .theme {

@@ -1,9 +1,9 @@
 <!--
  * @Description: 节点面板
- * @FilePath: \x6topology\src\components\x6topology\components\NodePanel\NodePanel.vue
+ * @FilePath: \x6topology\src\components\X6topology\components\NodePanel\NodePanel.vue
  * @Date: 2022-01-06 09:10:27
  * @LastEditors: Lin_kangjing
- * @LastEditTime: 2022-02-18 09:20:27
+ * @LastEditTime: 2022-03-08 11:52:12
  * @author: Lin_kangjing
 -->
 <template>
