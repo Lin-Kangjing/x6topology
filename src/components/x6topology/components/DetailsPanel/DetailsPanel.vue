@@ -3,7 +3,7 @@
  * @FilePath: \x6topology\src\components\X6topology\components\DetailsPanel\DetailsPanel.vue
  * @Date: 2022-01-06 09:46:14
  * @LastEditors: Lin_kangjing
- * @LastEditTime: 2022-03-08 17:07:33
+ * @LastEditTime: 2022-03-09 11:41:17
  * @author: Lin_kangjing
 -->
 <template>
@@ -105,9 +105,12 @@ import { state, mutations } from "../../store";
 import {
   borderTypeOptions,
   borderWidthOptions,
+  // 文字
   labelFontSizeOptions,
   labelFontFamilyOptions,
   labelFontStyleOptions,
+  labelPositionOptions,
+  labelPositionMap,
   fontStyleKeyMaps,
   // 边
   edgeArrowTypeOptions,
@@ -133,6 +136,7 @@ function getInitCellAttr() {
     text_fill: "",
     text_fontFamily: "",
     text_fontStyle: [],
+    text_position: "",
     // edge
     line_strokeDasharray: "",
     line_strokeWidth: "",
@@ -215,6 +219,17 @@ export default {
           changeFn: this.textChange,
           attrs: [
             {
+              name: "内容",
+              attrName: "text",
+              formControls: "el-textarea",
+            },
+            {
+              name: "位置",
+              attrName: "text_position",
+              formControls: "el-select",
+              options: labelPositionOptions,
+            },
+            {
               name: "字体大小",
               attrName: "text_fontSize",
               formControls: "el-select",
@@ -236,11 +251,6 @@ export default {
               attrName: "text_fontStyle",
               formControls: "el-checkbox-group",
               options: labelFontStyleOptions,
-            },
-            {
-              name: "内容",
-              attrName: "text",
-              formControls: "el-textarea",
             },
           ],
         },
@@ -288,6 +298,17 @@ export default {
           changeFn: this.textChange,
           attrs: [
             {
+              name: "内容",
+              attrName: "text",
+              formControls: "el-textarea",
+            },
+            // {
+            //   name: "位置",
+            //   attrName: "text_position",
+            //   formControls: "el-select",
+            //   options: labelPositionOptions,
+            // },
+            {
               name: "字体大小",
               attrName: "text_fontSize",
               formControls: "el-select",
@@ -309,11 +330,6 @@ export default {
               attrName: "text_fontStyle",
               formControls: "el-checkbox-group",
               options: labelFontStyleOptions,
-            },
-            {
-              name: "内容",
-              attrName: "text",
-              formControls: "el-textarea",
             },
           ],
         },
@@ -358,7 +374,22 @@ export default {
 
           // 设置旋转角度
           this.cellAttr.rotate = cell.getAngle();
-
+          // 设置label定位
+          let labelAttr = attrs.label;
+          if (labelAttr) {
+            let pos = "下";
+            for (const key in labelPositionMap) {
+              if (Object.hasOwnProperty.call(labelPositionMap, key)) {
+                const labelStr = JSON.stringify(labelPositionMap[key]);
+                if (labelStr === JSON.stringify(labelAttr)) {
+                  pos = key;
+                  break;
+                }
+              }
+            }
+            this.cellAttr.text_position = pos;
+          }
+          console.log(attrs);
           // 设置shape的样式属性
           let shapeAttrs = attrs && attrs[shape];
           if (!shapeAttrs) shapeAttrs = attrs.body;
@@ -453,7 +484,6 @@ export default {
       if (val === null) val = "none";
       state.cell.setAttrByPath(`${prePath}/${type}`, val);
     },
-
     // 文字属性样式改变
     textChange(type, val) {
       // 字体样式，粗体，斜体，等
@@ -468,6 +498,8 @@ export default {
             state.cell.setAttrByPath(`text/${styleKey}`, "none");
           }
         });
+      } else if (type === "text_position") {
+        state.cell.setAttrs(labelPositionMap[val] || {}, { deep: false });
       } else if (type === "text" && state.cell.shape === "edge") {
         //设置边的label
         state.cell.setLabels([val]);

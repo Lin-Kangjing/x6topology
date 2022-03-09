@@ -3,7 +3,7 @@
  * @FilePath: \x6topology\src\components\X6topology\components\CanvasPanel\CanvasPanel.vue
  * @Date: 2022-01-06 09:27:50
  * @LastEditors: Lin_kangjing
- * @LastEditTime: 2022-03-08 14:23:31
+ * @LastEditTime: 2022-03-09 11:52:31
  * @author: Lin_kangjing
 -->
 <template>
@@ -227,9 +227,6 @@ export default {
           name: "node-editor",
           args: {
             event: e,
-            // setText: ({ cell, value }) => {
-            //   cell.setAttrs({ label: { text: value } });
-            // },
           },
         });
       });

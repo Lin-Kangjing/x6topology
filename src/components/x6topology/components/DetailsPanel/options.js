@@ -3,7 +3,7 @@
  * @FilePath: \x6topology\src\components\X6topology\components\DetailsPanel\options.js
  * @Date: 2022-02-17 16:53:28
  * @LastEditors: Lin_kangjing
- * @LastEditTime: 2022-02-24 14:43:11
+ * @LastEditTime: 2022-03-09 11:35:02
  * @author: Lin_kangjing
  */
 // node线条类型
@@ -55,6 +55,54 @@ export const fontStyleKeyMaps = Object.freeze({
   fontWeight: "bold",
   fontStyle: "italic",
   textDecoration: "underline",
+});
+// 标签位置
+export const labelPositionOptions = Object.freeze([
+  "中",
+  "上",
+  "右",
+  "下",
+  "左",
+]);
+// 标签位置map
+export const labelPositionMap = Object.freeze({
+  上: {
+    label: {
+      refY: -10,
+      textAnchor: "middle",
+      textVerticalAnchor: "middle",
+    },
+  },
+  右: {
+    label: {
+      refX: "100%",
+      refX2: 4,
+      textAnchor: "start",
+      textVerticalAnchor: "middle",
+    },
+  },
+  下: {
+    label: {
+      refY: "100%",
+      refY2: 10,
+      textAnchor: "middle",
+      textVerticalAnchor: "middle",
+    },
+  },
+  左: {
+    label: {
+      refX: 0,
+      refX2: -4,
+      textAnchor: "end",
+      textVerticalAnchor: "middle",
+    },
+  },
+  中: {
+    label: {
+      textAnchor: "middle",
+      textVerticalAnchor: "middle",
+    },
+  },
 });
 // 连线箭头
 export const edgeArrowTypeOptions = Object.freeze([

@@ -3,7 +3,7 @@
  * @FilePath: \x6topology\src\components\X6topology\store\index.js
  * @Date: 2022-01-06 10:45:20
  * @LastEditors: Lin_kangjing
- * @LastEditTime: 2022-03-08 16:41:49
+ * @LastEditTime: 2022-03-09 11:53:09
  * @author: Lin_kangjing
  */
 
@@ -43,20 +43,20 @@ export const mutations = {
   },
   // 初始化操作
   initOperation() {
-    this.setCanOpt("canPaste", !state.g.isClipboardEmpty());
+    mutations.setCanOpt("canPaste", !state.g.isClipboardEmpty());
     // 历史记录栈记录长度变更
     state.g.history.on("change", () => {
-      this.setCanOpt("canUndo", state.g.history.canUndo());
-      this.setCanOpt("canRedo", state.g.history.canRedo());
+      mutations.setCanOpt("canUndo", state.g.history.canUndo());
+      mutations.setCanOpt("canRedo", state.g.history.canRedo());
     });
     // 选中的节点/边发生改变(增删)时触发。
     state.g.on("selection:changed", ({ selected }) => {
       // selected 被选中的节点/边
-      this.setCanOpt("canCopy", !!selected.length);
-      this.setCanOpt("canDel", !!selected.length);
-      this.setCanOpt("canToFront", !!selected.length);
-      this.setCanOpt("canToBack", !!selected.length);
-      this.setCanOpt("canInGroup", !!selected.length);
+      mutations.setCanOpt("canCopy", !!selected.length);
+      mutations.setCanOpt("canDel", !!selected.length);
+      mutations.setCanOpt("canToFront", !!selected.length);
+      mutations.setCanOpt("canToBack", !!selected.length);
+      mutations.setCanOpt("canInGroup", !!selected.length);
       // 如果节点的shape==='group'则可以解组
       let canUnGroup = false;
       selected.forEach((cell) => {
@@ -64,12 +64,13 @@ export const mutations = {
           canUnGroup = true;
         }
       });
-      this.setCanOpt("canUnGroup", canUnGroup);
+      mutations.setCanOpt("canUnGroup", canUnGroup);
     });
     // 点击空白画布触发
     state.g.on("blank:click", () => {
-      this.setCanOpt("canMultiSelect", true);
+      mutations.setCanOpt("canMultiSelect", true);
       state.g.setRubberbandModifiers("ctrl");
+      state.g.enablePanning();
     });
     // 监听分组折叠执行操作
     state.g.on("node:collapse", ({ node }) => {
@@ -108,7 +109,7 @@ export const mutations = {
     cells = cells || state.g.getSelectedCells();
     if (cells.length) {
       state.g.copy(cells);
-      this.setCanOpt("canPaste", !state.g.isClipboardEmpty());
+      mutations.setCanOpt("canPaste", !state.g.isClipboardEmpty());
     }
   },
   // 粘贴
@@ -161,7 +162,8 @@ export const mutations = {
   // 开启鼠标左键多选
   multiSelect() {
     state.g.setRubberbandModifiers(null);
-    this.setCanOpt("canMultiSelect", false);
+    state.g.disablePanning();
+    mutations.setCanOpt("canMultiSelect", false);
   },
   // 成组
   inGroup() {
